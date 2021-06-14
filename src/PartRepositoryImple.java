@@ -16,14 +16,15 @@ public class PartRepositoryImple  extends UnicastRemoteObject implements PartRep
 		repository.sort(null);
 		for(Part p : repository){
 			if(p.getId() == id) {
-				return p;
+				Part auxPart = new PartImple(p);
+				return auxPart;
 			}
 		}
 		return null;
 	}
 
 	@Override
-	public boolean addPartToRepo(String name, String desc, ArrayList<Pair<Integer,Integer>> components) throws RemoteException {
+	public boolean addPartToRepo(String name, String desc, ArrayList<Pair<Integer,Part>> components) throws RemoteException {
 		int newId = repository.size()+1;
 		Part p = new PartImple(name, desc, components, newId);
 		return repository.add(p);
@@ -42,6 +43,11 @@ public class PartRepositoryImple  extends UnicastRemoteObject implements PartRep
 		else {
 			return null;
 		}
+	}
+
+	@Override
+	public ArrayList<Part> getPartList() throws RemoteException {
+		return repository;
 	}
 
 }

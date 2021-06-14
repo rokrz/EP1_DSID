@@ -8,7 +8,7 @@ public class PartImple extends UnicastRemoteObject implements Part, Comparable<P
 	private String name;
 	private String description;
 	private int id;
-	private ArrayList<Pair<Integer, Integer>> components;
+	private ArrayList<Pair<Integer, Part>> components;
 	
 	public PartImple() throws RemoteException{}
 	
@@ -30,7 +30,7 @@ public class PartImple extends UnicastRemoteObject implements Part, Comparable<P
 		this.id = id;
 	}
 	
-	public PartImple(String name, String desc, ArrayList<Pair<Integer,Integer>> components, int id) throws RemoteException{
+	public PartImple(String name, String desc, ArrayList<Pair<Integer,Part>> components, int id) throws RemoteException{
 		this.name = name;
 		this.description = desc;
 		this.components = components;
@@ -53,7 +53,7 @@ public class PartImple extends UnicastRemoteObject implements Part, Comparable<P
 	}
 
 	@Override
-	public ArrayList<Pair<Integer, Integer>> getComponentList() throws RemoteException{
+	public ArrayList<Pair<Integer, Part>> getComponentList() throws RemoteException{
 		return components;
 	}
 
@@ -73,7 +73,7 @@ public class PartImple extends UnicastRemoteObject implements Part, Comparable<P
 	}
 
 	@Override
-	public void setComponentList(ArrayList<Pair<Integer,Integer>> components) throws RemoteException{
+	public void setComponentList(ArrayList<Pair<Integer,Part>> components) throws RemoteException{
 		this.components = components;
 	}
 	
@@ -89,6 +89,15 @@ public class PartImple extends UnicastRemoteObject implements Part, Comparable<P
 			return -1;
 		}
 		return -1;
+	}
+
+	@Override
+	public String printComponentList() throws RemoteException {
+		String auxComponents = "";
+		for(Pair<Integer,Part> p : this.components) {
+			auxComponents+=p.quantity+ ", "+p.item.getPartName();
+		}
+		return auxComponents;
 	}
 
 }
