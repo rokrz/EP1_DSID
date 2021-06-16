@@ -95,7 +95,7 @@ public class PartImple extends UnicastRemoteObject implements Part, Comparable<P
 	public String printComponentList() throws RemoteException {
 		String auxComponents = "";
 		for(Pair<Integer,Part> p : this.components) {
-			auxComponents+=p.quantity+ ", "+p.item.getPartName();
+			auxComponents+=" "+p.quantity+ ", "+p.item.getPartName()+";";
 		}
 		return auxComponents;
 	}

@@ -1,11 +1,33 @@
+import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
-public class PartRepositoryImple  extends UnicastRemoteObject implements PartRepository{
-	
+public class PartRepositoryImple extends UnicastRemoteObject implements PartRepository{
+	private static Registry r;
 	private static final long serialVersionUID = 1L;
 	private ArrayList<Part> repository;
+	public String repositoryName;
+		
+	public static void main(String[] args) {
+		try {
+			r = LocateRegistry.createRegistry(1099);
+			PartRepositoryImple[] servers = new PartRepositoryImple[args.length];
+			for(int j =0; j<servers.length;j++) {
+				servers[j] = new PartRepositoryImple();
+			}
+			for(int i = 0;i<args.length;i++) {
+				r.bind(args[i], servers[i]);
+			}
+			
+		} catch (RemoteException e1) {
+			e1.printStackTrace();
+		} catch (AlreadyBoundException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public PartRepositoryImple() throws RemoteException{
 		this.repository = new ArrayList<Part>();
@@ -48,6 +70,12 @@ public class PartRepositoryImple  extends UnicastRemoteObject implements PartRep
 	@Override
 	public ArrayList<Part> getPartList() throws RemoteException {
 		return repository;
+	}
+
+	@Override
+	public boolean addCopyPartToRepo(Part p) throws RemoteException {
+		p.setId(repository.size()+1);
+		return repository.add(p);
 	}
 
 }
