@@ -1,4 +1,3 @@
-import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -15,7 +14,8 @@ public class ComputerPartManagerClient {
 	private static Scanner s = new Scanner(System.in);
 	private static final String INSERTCOMMAND = "\nAguardando próximo comando...\n";
 	private static Registry registry;
-		
+	
+	//Inicia o client
 	public static void main(String[] args) {
 		listedRepositories = new ArrayList<String>();
 		try {
@@ -35,20 +35,24 @@ public class ComputerPartManagerClient {
 		}
 	}
 	
+	//Imprime a lista de comandos
 	public static void printHelp() {
 		System.out.println("Olá! Seja bem vindo ao Gerenciador de Peças. Para utilizar o programa, use os seguintes comandos:\n"
-				+ "\tbind REPONAME: para alterar o repositorio atual para o repositorio REPONAME.\n"
+				+ "\tbind REPONAME: para alterar o repositório atual para o repositório REPONAME.\n"
 				+ "\tlistP: para mostrar as peças existentes no repositorio atual.\n"
-				+ "\tgetP ID: para buscar no repositório a peça com código ID, onde ID é o cóodigo numérico da peça.\n"
+				+ "\tgetP ID: para buscar no repositório a peça com código ID, onde ID é o código numérico da peça.\n"
 				+ "\tshowP: para mostrar os atributos da peça atual selecionada.\n"
+				+ "\tshowList: para mostrar as peças presentes na lista de componentes.\n"
 				+ "\tclearList: para limpar a lista de componentes atual.\n"
 				+ "\taddSubPart QTD: para adicionar uma quantidade QTD da peça atual na lista de componentes atual, onde QTD é aquantidade, em números, dessa peça.\n"
-				+ "\taddP: para adicionar uma nova peça ao repositório. Essa peça terá nome NAME e uma descrição DESC, que é opcional. Além disso, receberá a lista atual de componentes como sua lista de componentes.Adicionar uma peça limpa a lista de componentes.\n"
+				+ "\taddP: para adicionar uma nova peça ao repositório. Essa peça terá nome NAME e uma descrição DESC, que é opcional.\n"
 				+ "\taddCopyP: para adicionar uma coópia da peça atual no repositório. O id dessa peça será recalculado para evitar conflito no repo\n"
 				+ "\tlistRepos: para imprimir uma lista com os repositórios já acessados nessa seção.\n"
-				+ "\thelp: para imprimir essa lista de comandos novamente.\n");
+				+ "\thelp: para imprimir essa lista de comandos novamente.\n"
+				+ "\tquit: encerra a aplicação cliente.\n");
 	}
 	
+	//Trata a entrada do usuario e executa o comando desejado
 	public static void readInput(String nextCommand) {
 		if(nextCommand.toLowerCase().contains("help".toLowerCase())){
 			printHelp();
@@ -67,9 +71,13 @@ public class ComputerPartManagerClient {
 				getP(partId);
 			}catch(NumberFormatException ne) {
 				System.out.println("ERRO: Não foi recebido um numero como parametro. Verifique e tente novamente...");
+			}catch(ArrayIndexOutOfBoundsException ae) {
+				System.out.println("ERRO: Não foi recebido um parametro. Verifique e tente novamente...");
 			}
 		}else if(nextCommand.toLowerCase().contains("showP".toLowerCase())) {
 			showP();
+		}else if(nextCommand.toLowerCase().contains("showList".toLowerCase())){
+			showCurrentComponentList();
 		}else if(nextCommand.toLowerCase().contains("clearList".toLowerCase())) {
 			clearList();
 		}else if(nextCommand.toLowerCase().contains("addSubPart".toLowerCase())) {
@@ -78,6 +86,8 @@ public class ComputerPartManagerClient {
 				addSubPart(componentQtd);
 			}catch(NumberFormatException ne) {
 				System.out.println("ERRO: Não foi recebido um numero como parametro. Verifique e tente novamente...");
+			}catch(ArrayIndexOutOfBoundsException ae) {
+				System.out.println("ERRO: Não foi recebido um parametro. Verifique e tente novamente...");
 			}
 		}else if(nextCommand.toLowerCase().contains("addCopyP".toLowerCase())) {
 			addCopyPart();
@@ -102,9 +112,28 @@ public class ComputerPartManagerClient {
 			printKnownRepositories();
 		}else if(nextCommand.toLowerCase().contains("quit".toLowerCase())) {
 			quit();
+		}else {
+			System.out.println("Não há um comando correspondente. Tente novamente...");
 		}
 	}
 	
+	//Mostra as peçs na lista de componentes atual
+	private static void showCurrentComponentList() {
+		if(currentComponentsList!=null && currentComponentsList.size()>0) {
+			System.out.println("Lista de componentes atuais:\n"
+					+"Quantidade, Nome da peça\n");
+			for(Pair<Integer,Part> p : currentComponentsList) {
+				try {
+					System.out.println(p.quantity+", "+p.item.getPartName());
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}
+			}
+		}else {
+			System.out.println("A lista de componentes está vazia...");
+		}
+	}
+
 	//Adiciona uma copia da currentPart no currentRepository
 	private static void addCopyPart() {
 		try {
@@ -179,6 +208,7 @@ public class ComputerPartManagerClient {
 			Part auxPart = currentRepository.findPartById(id);
 			if(auxPart!=null) {
 				currentPart = auxPart;
+				System.out.println("Peça encontrada. ID: "+currentPart.getId()+", Name: "+currentPart.getPartName());
 			}else {
 				System.out.println("Não foi encontrada uma peça com o identificador desejado...");
 			}
