@@ -47,6 +47,7 @@ public class ComputerPartManagerClient {
 				+ "\taddSubPart QTD: para adicionar uma quantidade QTD da peça atual na lista de componentes atual, onde QTD é aquantidade, em números, dessa peça.\n"
 				+ "\taddP: para adicionar uma nova peça ao repositório. Essa peça terá nome NAME e uma descrição DESC, que é opcional.\n"
 				+ "\taddCopyP: para adicionar uma coópia da peça atual no repositório. O id dessa peça será recalculado para evitar conflito no repo\n"
+				+ "\tremoveP ID: para remover a peça de ID desejado do repositório atual. Caso ela não exista, nenhuma peça será removida\n"
 				+ "\tlistRepos: para imprimir uma lista com os repositórios já acessados nessa seção.\n"
 				+ "\thelp: para imprimir essa lista de comandos novamente.\n"
 				+ "\tquit: encerra a aplicação cliente.\n");
@@ -112,11 +113,36 @@ public class ComputerPartManagerClient {
 			printKnownRepositories();
 		}else if(nextCommand.toLowerCase().contains("quit".toLowerCase())) {
 			quit();
+		}else if(nextCommand.toLowerCase().contains("removeP".toLowerCase())) {
+			try {
+				int partId = Integer.parseInt(nextCommand.split(" ")[1]);
+				removeP(partId);
+			}catch(NumberFormatException ne) {
+				System.out.println("ERRO: Não foi recebido um numero como parametro. Verifique e tente novamente...");
+			}catch(ArrayIndexOutOfBoundsException ae) {
+				System.out.println("ERRO: Não foi recebido um parametro. Verifique e tente novamente...");
+			}
 		}else {
 			System.out.println("Não há um comando correspondente. Tente novamente...");
 		}
 	}
 	
+	private static void removeP(int partId) {
+		
+		try {
+			Part auxiliarPart = currentRepository.removeFromRepo(partId);
+			System.out.println("Removendo o seguinte objeto do repositório: ");
+			if(auxiliarPart!=null) {
+				System.out.println(auxiliarPart.getId()+" - "+auxiliarPart.getPartName()+" - "+auxiliarPart.getPartDesc()+" - "+auxiliarPart.printComponentList());
+				System.out.println("Objeto Removido");
+			}else {
+				System.out.println("O objeto não pode ser removido...");
+			}
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+
 	//Mostra as peçs na lista de componentes atual
 	private static void showCurrentComponentList() {
 		if(currentComponentsList!=null && currentComponentsList.size()>0) {

@@ -90,6 +90,21 @@ public class PartImple extends UnicastRemoteObject implements Part, Comparable<P
 		}
 		return -1;
 	}
+	
+	@Override
+	public boolean equals(Object p) {
+		Part auxObj = (Part) p;
+		try {
+			if(auxObj.getPartName().equals(this.name) && this.id ==auxObj.getId()) {
+				return true;
+			}else {
+				return false;
+			}
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 
 	@Override
 	public String printComponentList() throws RemoteException {

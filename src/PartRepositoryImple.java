@@ -57,7 +57,8 @@ public class PartRepositoryImple extends UnicastRemoteObject implements PartRepo
 	public Part removeFromRepo(int id) throws RemoteException {
 		Part p = findPartById(id);
 		if(p!=null) {
-			if(repository.remove(p)) {
+			repository.remove(repository.indexOf(p));
+			if(!repository.contains(p)) {
 				return p;
 			}else {
 				return null;
