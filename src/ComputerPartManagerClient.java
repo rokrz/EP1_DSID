@@ -43,7 +43,7 @@ public class ComputerPartManagerClient {
 				+ "\tshowP: para mostrar os atributos da peça atual selecionada.\n"
 				+ "\tclearList: para limpar a lista de componentes atual.\n"
 				+ "\taddSubPart QTD: para adicionar uma quantidade QTD da peça atual na lista de componentes atual, onde QTD é aquantidade, em números, dessa peça.\n"
-				+ "\taddPart: para adicionar uma nova peça ao repositório. Essa peça terá nome NAME e uma descrição DESC, que é opcional. Além disso, receberá a lista atual de componentes como sua lista de componentes.Adicionar uma peça limpa a lista de componentes.\n"
+				+ "\taddP: para adicionar uma nova peça ao repositório. Essa peça terá nome NAME e uma descrição DESC, que é opcional. Além disso, receberá a lista atual de componentes como sua lista de componentes.Adicionar uma peça limpa a lista de componentes.\n"
 				+ "\taddCopyP: para adicionar uma coópia da peça atual no repositório. O id dessa peça será recalculado para evitar conflito no repo\n"
 				+ "\tlistRepos: para imprimir uma lista com os repositórios já acessados nessa seção.\n"
 				+ "\thelp: para imprimir essa lista de comandos novamente.\n");
@@ -53,30 +53,51 @@ public class ComputerPartManagerClient {
 		if(nextCommand.toLowerCase().contains("help".toLowerCase())){
 			printHelp();
 		}else if(nextCommand.toLowerCase().contains("bind".toLowerCase())) {
-			String repoName = nextCommand.split(" ")[1];
-			bind(repoName);
+			try {
+				String repoName = nextCommand.split(" ")[1];
+				bind(repoName);
+			}catch(ArrayIndexOutOfBoundsException ae) {
+				System.out.println("ERRO: Não foi recebido um nome de repositorio como parametro. Verifique e tente novamente...");
+			}
 		}else if(nextCommand.toLowerCase().contains("listP".toLowerCase())) {
 			listP();
 		}else if(nextCommand.toLowerCase().contains("getP".toLowerCase())) {
-			int partId = Integer.parseInt(nextCommand.split(" ")[1]);
-			getP(partId);
+			try {
+				int partId = Integer.parseInt(nextCommand.split(" ")[1]);
+				getP(partId);
+			}catch(NumberFormatException ne) {
+				System.out.println("ERRO: Não foi recebido um numero como parametro. Verifique e tente novamente...");
+			}
 		}else if(nextCommand.toLowerCase().contains("showP".toLowerCase())) {
 			showP();
 		}else if(nextCommand.toLowerCase().contains("clearList".toLowerCase())) {
 			clearList();
 		}else if(nextCommand.toLowerCase().contains("addSubPart".toLowerCase())) {
-			int componentQtd = Integer.parseInt(nextCommand.split(" ")[1]);
-			addSubPart(componentQtd);
-		}else if(nextCommand.toLowerCase().contains("addSubPart".toLowerCase())) {
+			try {
+				int componentQtd = Integer.parseInt(nextCommand.split(" ")[1]);
+				addSubPart(componentQtd);
+			}catch(NumberFormatException ne) {
+				System.out.println("ERRO: Não foi recebido um numero como parametro. Verifique e tente novamente...");
+			}
+		}else if(nextCommand.toLowerCase().contains("addCopyP".toLowerCase())) {
 			addCopyPart();
-		}else if(nextCommand.toLowerCase().contains("addPart".toLowerCase())) {
+		}else if(nextCommand.toLowerCase().contains("addP".toLowerCase())) {
 			String name = null;
 			String desc = null;
 			System.out.println("Digite o NOME da peça:");
 			name = s.nextLine();
 			System.out.println("Digite a descrição do produto:");
 			desc = s.nextLine();
-			addPart(name, desc);
+			if(name!=null) {
+				if(!name.equals("")) {
+					addPart(name, desc);
+				}else {
+					System.out.println("ERRO: O Nome da peça não pode ser nulo. Verifique e tente novamente...");
+
+				}
+			}else {
+				System.out.println("ERRO: O Nome da peça não pode ser nulo. Verifique e tente novamente...");
+			}
 		}else if(nextCommand.toLowerCase().contains("listRepos".toLowerCase())) {
 			printKnownRepositories();
 		}else if(nextCommand.toLowerCase().contains("quit".toLowerCase())) {
@@ -171,8 +192,8 @@ public class ComputerPartManagerClient {
 		if(currentPart!=null) {
 			try {
 				System.out.println("Mostrando peça atual.\n"
-						+ "ID - Nome - Descrição - Lista de componentes \n");
-				System.out.println(currentPart.getId()+" - "+currentPart.getPartName()+" - "+currentPart.getPartDesc()+" - "+currentPart.printComponentList());
+						+ "ID - Nome - Primaria? - Descrição - Lista de componentes \n");
+				System.out.println(currentPart.getId()+" - "+currentPart.getPartName()+" - "+currentPart.isPrimary()+" - "+currentPart.getPartDesc()+" - "+currentPart.printComponentList());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

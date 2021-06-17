@@ -16,12 +16,12 @@ public class PartRepositoryImple extends UnicastRemoteObject implements PartRepo
 			r = LocateRegistry.createRegistry(1099);
 			PartRepositoryImple[] servers = new PartRepositoryImple[args.length];
 			for(int j =0; j<servers.length;j++) {
-				servers[j] = new PartRepositoryImple();
+				servers[j] = new PartRepositoryImple(args[j]);
+				System.out.println("New Repository Created: "+args[j]);
 			}
 			for(int i = 0;i<args.length;i++) {
 				r.bind(args[i], servers[i]);
 			}
-			
 		} catch (RemoteException e1) {
 			e1.printStackTrace();
 		} catch (AlreadyBoundException e) {
@@ -29,8 +29,9 @@ public class PartRepositoryImple extends UnicastRemoteObject implements PartRepo
 		}
 	}
 	
-	public PartRepositoryImple() throws RemoteException{
+	public PartRepositoryImple(String repoName) throws RemoteException{
 		this.repository = new ArrayList<Part>();
+		this.repositoryName = repoName;
 	}
 	
 	@Override

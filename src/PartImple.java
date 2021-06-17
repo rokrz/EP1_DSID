@@ -100,4 +100,13 @@ public class PartImple extends UnicastRemoteObject implements Part, Comparable<P
 		return auxComponents;
 	}
 
+	@Override
+	public boolean isPrimary() throws RemoteException {
+		if(this.components==null || this.components.size()==0) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+
 }

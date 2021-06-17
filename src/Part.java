@@ -13,5 +13,6 @@ public interface Part extends Remote{
 	public ArrayList<Pair<Integer,Part>> getComponentList() throws RemoteException;
 	public void setComponentList(ArrayList<Pair<Integer,Part>> components) throws RemoteException;
 	public String printComponentList() throws RemoteException;
+	public boolean isPrimary()throws RemoteException;
 
 }
