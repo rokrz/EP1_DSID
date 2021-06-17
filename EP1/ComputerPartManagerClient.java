@@ -14,7 +14,8 @@ public class ComputerPartManagerClient {
 	private static Scanner s = new Scanner(System.in);
 	private static final String INSERTCOMMAND = "\nAguardando próximo comando...\n";
 	private static Registry registry;
-		
+	
+	//Inicia o client
 	public static void main(String[] args) {
 		listedRepositories = new ArrayList<String>();
 		try {
@@ -37,9 +38,9 @@ public class ComputerPartManagerClient {
 	//Imprime a lista de comandos
 	public static void printHelp() {
 		System.out.println("Olá! Seja bem vindo ao Gerenciador de Peças. Para utilizar o programa, use os seguintes comandos:\n"
-				+ "\tbind REPONAME: para alterar o repositorio atual para o repositorio REPONAME.\n"
+				+ "\tbind REPONAME: para alterar o repositório atual para o repositório REPONAME.\n"
 				+ "\tlistP: para mostrar as peças existentes no repositorio atual.\n"
-				+ "\tgetP ID: para buscar no repositório a peça com código ID, onde ID é o cóodigo numérico da peça.\n"
+				+ "\tgetP ID: para buscar no repositório a peça com código ID, onde ID é o código numérico da peça.\n"
 				+ "\tshowP: para mostrar os atributos da peça atual selecionada.\n"
 				+ "\tshowList: para mostrar as peças presentes na lista de componentes.\n"
 				+ "\tclearList: para limpar a lista de componentes atual.\n"
