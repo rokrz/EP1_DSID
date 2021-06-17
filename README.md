@@ -4,12 +4,11 @@ O projeto visa implementar um sistema distribuido de controle de objetos. Como p
 
 
 Para abrir o servidor:
-1- abra o CMD no diretorio bin
+1- abra o CMD no diretorio dos arquivos
 2- execute o comando rmic PartRepositoryImple
-3- execute o comando java PartServer nomeDoRepositorio ...
-4- Repita isso para cada servidor que desejar instanciar
+3- execute o comando java PartRepositoryImple repoName1 repoName2 ... (repoName é um nome arbitrario dado pelo usuário)
 
 Para abrir o client:
-1- abra outro cmd
-2- execute o comando java ComputerPartManagerClient nomeDoRepositorio
+1- abra outro cmd no mesmo diretorio
+2- execute o comando java ComputerPartManagerClient
 3- os comandos do EP serão mostrados quando for inicializado
